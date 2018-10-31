@@ -18,7 +18,6 @@ class NQueenMath {
 
   public static isValid (x: number, y: number, queens: Array<Queen>): boolean {
     let valid: boolean = true;
-
     queens.forEach((queen) => {
 
       // If they are on the same horizontal plane.
