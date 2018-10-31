@@ -37,7 +37,7 @@ class Board {
   public print (): Array<string> {
     let board: Array<string> = new Array<string>();
 
-    this.tiles.forEach((row: Array<boolean>) => {
+    this.tiles.forEach((row: Array<boolean>, index: number) => {
 
       let rowString: string = '';
 
@@ -48,9 +48,17 @@ class Board {
           rowString += this.letter + ' ';
       });
 
+      rowString += index.toString();
+
       board.push(rowString);
 
     });
+
+    let rowCount: string = '';
+    for (let i: number = 0; i < this.size; i++) {
+      rowCount += i.toString() + ' ';
+    }
+    board.push(rowCount);
 
     return board;
   }
