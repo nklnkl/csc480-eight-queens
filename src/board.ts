@@ -2,6 +2,11 @@ export {
   Board
 }
 
+interface Tile {
+  row: number;
+  col: number;
+};
+
 class Board {
 
   private tiles: Array<Array<boolean>>;
@@ -45,8 +50,8 @@ class Board {
     return board;
   }
 
-  public update (row: number, col: number, value: boolean) {
-    if (this.checkRow(row) && this.checkCol(col)) {
+  public update (row: number, col: number, value: boolean): boolean {
+    if (this.checkRow(row) && this.checkCol(col) && this.checkDiag(row, col)) {
       this.tiles[row][col] = value;
       return true;
     }
@@ -55,7 +60,7 @@ class Board {
     }
   }
 
-  public checkRow (row: number) {
+  public checkRow (row: number): boolean {
     // If there is something already in this row.
     if (this.tiles[row].indexOf(true) != -1) {
       return false;
@@ -66,12 +71,90 @@ class Board {
     }
   }
 
-  public checkCol (col: number) {
+  public checkCol (col: number): boolean {
     for (let i:number = 0; i < this.size; i++) {
       if (this.tiles[i][col] == true) {
         return false;
       }
     }
+    return true;
+  }
+
+  public checkDiag (row: number, col: number): boolean {
+    if (this.checkPositiveSlope(row, col) && this.checkNegativeSlope(row, col)) {
+      return true;
+    }
+    else
+      return false;
+  }
+
+  public maxNegativeSlope (row: number, col: number): Tile {
+    let tile: Tile = {
+      row: row,
+      col: col
+    };
+
+    while (tile.col > 0 && tile.row > 0) {
+      tile.row -= 1;
+      tile.col -= 1;
+    }
+
+    return tile;
+  }
+
+  public minPositiveSlope (row: number, col: number): Tile {
+    let tile: Tile = {
+      row: row,
+      col: col
+    };
+
+    while (tile.col > 0 && tile.row < this.size-1) {
+      tile.row += 1;
+      tile.col -= 1;
+    }
+
+    return tile;
+  }
+
+  /*
+    Return
+      true - if there are no pieces in diagonal negative slope
+      false - if there are pieces in diagonal negative slope.
+  */
+  public checkNegativeSlope (row: number, col: number): boolean {
+    let tile: Tile = this.maxNegativeSlope(row, col);
+
+    while(tile.col < this.size-1 && tile.row < this.size-1 ) {
+
+      if (this.tiles[tile.row][tile.col] == true) {
+        return false;
+      }
+
+      tile.col += 1;
+      tile.row += 1;
+    }
+
+    return true;
+  }
+
+  /*
+    Return
+      true - if there are no pieces in diagonal positive slope
+      false - if there are pieces in diagonal positive slope.
+  */
+  public checkPositiveSlope (row: number, col: number): boolean {
+    let tile: Tile = this.minPositiveSlope(row, col);
+
+    while(tile.col < this.size-1 && tile.row > 0 ) {
+
+      if (this.tiles[tile.row][tile.col] == true) {
+        return false;
+      }
+
+      tile.col += 1;
+      tile.row -= 1;
+    }
+
     return true;
   }
 }
