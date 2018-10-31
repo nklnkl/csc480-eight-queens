@@ -46,7 +46,7 @@ class Board {
   }
 
   public update (row: number, col: number, value: boolean) {
-    if (this.checkRow(row)) {
+    if (this.checkRow(row) && this.checkCol(col)) {
       this.tiles[row][col] = value;
       return true;
     }
@@ -64,5 +64,14 @@ class Board {
     else {
       return true;
     }
+  }
+
+  public checkCol (col: number) {
+    for (let i:number = 0; i < this.size; i++) {
+      if (this.tiles[i][col] == true) {
+        return false;
+      }
+    }
+    return true;
   }
 }
