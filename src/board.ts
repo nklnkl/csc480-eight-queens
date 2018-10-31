@@ -1,5 +1,6 @@
 export {
-  Board
+  Board,
+  Tile
 }
 
 interface Tile {
@@ -29,6 +30,10 @@ class Board {
     }
   }
 
+  public getSize(): number {
+    return this.size;
+  }
+
   public print (): Array<string> {
     let board: Array<string> = new Array<string>();
 
@@ -51,12 +56,18 @@ class Board {
   }
 
   public update (row: number, col: number, value: boolean): boolean {
-    if (this.checkRow(row) && this.checkCol(col) && this.checkDiag(row, col)) {
-      this.tiles[row][col] = value;
-      return true;
+    if (value) {
+      if (this.checkRow(row) && this.checkCol(col) && this.checkDiag(row, col)) {
+        this.tiles[row][col] = value;
+        return true;
+      }
+      else {
+        return false;
+      }
     }
     else {
-      return false;
+      this.tiles[row][col] = value;
+      return true;
     }
   }
 
