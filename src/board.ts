@@ -88,7 +88,7 @@ class Board {
       return false;
   }
 
-  public maxNegativeSlope (row: number, col: number): Tile {
+  private maxNegativeSlope (row: number, col: number): Tile {
     let tile: Tile = {
       row: row,
       col: col
@@ -102,7 +102,7 @@ class Board {
     return tile;
   }
 
-  public minPositiveSlope (row: number, col: number): Tile {
+  private minPositiveSlope (row: number, col: number): Tile {
     let tile: Tile = {
       row: row,
       col: col
@@ -121,7 +121,7 @@ class Board {
       true - if there are no pieces in diagonal negative slope
       false - if there are pieces in diagonal negative slope.
   */
-  public checkNegativeSlope (row: number, col: number): boolean {
+  private checkNegativeSlope (row: number, col: number): boolean {
     let tile: Tile = this.maxNegativeSlope(row, col);
 
     while(tile.col < this.size-1 && tile.row < this.size-1 ) {
@@ -142,7 +142,7 @@ class Board {
       true - if there are no pieces in diagonal positive slope
       false - if there are pieces in diagonal positive slope.
   */
-  public checkPositiveSlope (row: number, col: number): boolean {
+  private checkPositiveSlope (row: number, col: number): boolean {
     let tile: Tile = this.minPositiveSlope(row, col);
 
     while(tile.col < this.size-1 && tile.row > 0 ) {
