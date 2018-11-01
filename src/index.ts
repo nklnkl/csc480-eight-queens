@@ -1,11 +1,33 @@
 import { NQueenMath, Queen } from './n-queen-math';
 
 class NQueen {
+  
+  /*
+    Array to keep track of pieces placed on the board.
+  */
   private queens: Array<Queen>;
+
+  /*
+    Number to indicate the 1x1 dimension of the board as well as solution goal.
+  */
   private size: number;
+
+  /*
+    Coordinates to iterate and keep track of board coordinates. These will be used to calculate 
+    current positions and next positions.
+  */
   private x: number;
   private y: number;
-  private start: number;
+
+  /*
+    Flag to indicate if the search process is running. On the first search() call, this will turn from false to true.
+    When the search() runs into x=1 & y=1 after starting, the search() tree will return ending the recursion.
+  */
+  private started: boolean;
+
+  /*
+    Number to indicate how many solutions have been found. This wil be incremented every time the queens list reaches the size goal.
+  */
   private solution: number;
 
   constructor (size: number) {
@@ -13,53 +35,52 @@ class NQueen {
     this.size = size;
     this.x = 1;
     this.y = 1;
-    this.start = -1;
+    this.started = false;
     this.solution = 0;
   }
 
-  public search () {
+  public search ():void {
+    // If we have reached the initial position, after starting.
+    if (this.x == 1 && this.y == 1 && this.started == true) {
+      // Finally end.
+      //console.log('# of push:', this.numPush, '# of block:', this.numBlock, '# of back:', this.numBack);
+      return;
+    }
+
+    // Set started flag for true on first run.
+    if (this.started == false)
+      this.started = true;
+
     // Check if valid move.
     if (NQueenMath.isValid(this.x, this.y, this.queens)) {
       // If so add queen to position.
       this.queens.push({ x: this.x, y: this.y });
-      // If this was our only queen so far, set start.
-      if (this.queens.length == 1)
-        this.start = this.y;
+
+      // If we have achieved our goal
+      if (this.queens.length == this.size) {
+        this.solution += 1;
+        this.print();
+        this.goBack();
+      }
     }
 
-    // If we have achieved our goal
-    if (this.queens.length == this.size) {
-      this.solution += 1;
-      this.print();
+    // Go to next position.
+    this.increment();
+
+    // If we have overlapped to the front/head.
+    if (this.queens.length > 0 && (this.queens[0].x == this.x && this.queens[0].y == this.y)) {
       this.goBack();
+      this.increment();
     }
 
-
-    // Search again.
-    this.x +=1;
-    this.correct();
-    this.search();
+    return this.search();
   }
 
-  public goBack ():void {
-    // Go back to last queen's position + 1.
-    this.x = this.queens[this.queens.length-1].x+1;
-    this.y = this.queens[this.queens.length-1].y;
+  private increment (): void {
+    // Iterate to next col.
+    this.x += 1;
 
-    // Remove last queen.
-    this.queens.pop();
-
-    // If there are no more queens left, adjust startingRow/overlap.
-    if (this.queens.length == 0)
-      this.start = -1;
-    
-    this.correct();
-
-    return;
-  }
-
-  private correct(): void {
-    // If the next column is out of bounds.
+    // If the next col is out of bounds.
     if (this.x > this.size) {
       // Set column to 1 and increment row.
       this.x = 1;
@@ -71,12 +92,15 @@ class NQueen {
       // Set row to row 1.
       this.y = 1;
     }
+  }
 
-    // Check if we started in this row.
-    if (this.y == this.start) {
-      // If we did, go back.
-      this.goBack();
-    }
+  public goBack ():void {
+    // Go back to last queen's position + 1.
+    this.x = this.queens[this.queens.length-1].x;
+    this.y = this.queens[this.queens.length-1].y;
+
+    // Remove last queen.
+    this.queens.pop();
 
     return;
   }
@@ -118,5 +142,5 @@ class NQueen {
 
 }
 
-let nQueen: NQueen = new NQueen(4);
+let nQueen: NQueen = new NQueen(5);
 nQueen.search();
