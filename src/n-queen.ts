@@ -192,8 +192,8 @@ class NQueen {
     // Finally end.
     this.endTime = Moment().valueOf();
     console.log('');
-    console.log('Total Rotated Solutions:', this.solution);
-    console.log('Total Unique Solutions:', this.solution/this.size);
+    console.log('Rotated Solutions:', this.solution);
+    console.log('Unique Solutions:', this.solution/this.size);
     console.log('');
     console.log('Start time:', Moment(this.startTime).format());
     console.log('End time:', Moment(this.endTime).format());
@@ -202,6 +202,9 @@ class NQueen {
     console.log('End time (Unix Epoch):', Moment(this.endTime).valueOf());
     console.log('');
     console.log('Search Time:', this.endTime - this.startTime, 'milliseconds');
+    console.log('');
+    console.log('Memory Allocated:', process.memoryUsage().heapTotal / 1000000, 'Mb');
+    console.log('Memory Usage:', process.memoryUsage().heapUsed / 1000000, 'Mb');
     return;
   }
 
