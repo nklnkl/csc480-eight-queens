@@ -1,9 +1,9 @@
 # csc480-eight-queens
 
 ## For Prof.Battifarano
-Latest build 0.3 is located [here](https://github.com/nklnkl/csc480-eight-queens/releases/tag/0.3)
+Latest build 0.4 is located [here](https://github.com/nklnkl/csc480-eight-queens/releases/tag/0.4)
 
-## Latest Report as of 0.3
+## Latest Report as of 0.4
 ```
 Rotated Solutions: 736
 Unique Solutions: 92
