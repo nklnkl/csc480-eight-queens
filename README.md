@@ -2,6 +2,7 @@
 
 ## For Prof.Battifarano
 Latest build 0.4 is located [here](https://github.com/nklnkl/csc480-eight-queens/releases/tag/0.4)
+Project Presentation is located [here](https://docs.google.com/presentation/d/1twPRI_RlNdrgKMjyvBhqdrHlWd8OMO-Jpkvb7hcwPqQ/edit?usp=sharing)
 
 ## Latest Report as of 0.4
 ```
