@@ -43,6 +43,14 @@ class NQueen {
   */
   private endTime: number;
 
+  /*
+    Algorithm tracking.
+  */
+  private numInc: number;
+  private numAdd: number;
+  private numBack: number;
+  private numSearch: number;
+
   constructor (size: number, x: number, y: number) {
     this.queens = new Array<Queen>();
     this.size = size;
@@ -52,9 +60,15 @@ class NQueen {
     this.solution = 0;
     this.startTime = 0;
     this.endTime = 0;
+    this.numInc = 0;
+    this.numAdd = 0;
+    this.numBack = 0;
+    this.numSearch = 0;
   }
 
   public search ():void {
+    this.numSearch += 1;
+
     // If we have reached the initial position, again.
     if (this.x == 1 && this.y == 1 && this.started == true && this.queens.length == 0)
       return this.report();
@@ -87,6 +101,8 @@ class NQueen {
   }
 
   private addPiece (): void {
+    this.numAdd += 1;
+
     // If so add queen to position.
     this.queens.push({ x: this.x, y: this.y });
 
@@ -100,6 +116,8 @@ class NQueen {
   }
 
   private increment (): void {
+    this.numInc += 1;
+
     // Iterate to next col.
     this.x += 1;
 
@@ -119,6 +137,8 @@ class NQueen {
   }
 
   private goBack ():void {
+    this.numBack += 1;
+
     // Go back to last queen's position + 1.
     this.x = this.queens[this.queens.length-1].x;
     this.y = this.queens[this.queens.length-1].y;
@@ -205,6 +225,11 @@ class NQueen {
     console.log('');
     console.log('Memory Allocated:', process.memoryUsage().heapTotal / 1000000, 'Mb');
     console.log('Memory Usage:', process.memoryUsage().heapUsed / 1000000, 'Mb');
+    console.log('');
+    console.log('# of Search:', this.numSearch);
+    console.log('# of Increments:', this.numInc);
+    console.log('# of Valid Moves:', this.numAdd);
+    console.log('# of Backtracks:', this.numBack);
     return;
   }
 
