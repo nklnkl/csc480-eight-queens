@@ -1,4 +1,6 @@
 import { NQueenMath, Queen } from './n-queen-math';
+import * as ReadLine from 'readline-sync';
+import 'colors';
 
 class NQueen {
   
@@ -44,6 +46,10 @@ class NQueen {
     if (this.x == 1 && this.y == 1 && this.started == true) {
       // Finally end.
       //console.log('# of push:', this.numPush, '# of block:', this.numBlock, '# of back:', this.numBack);
+      if (this.solution == 0) {
+        console.log('No solutions found.');
+        console.log('');
+      }
       return;
     }
 
@@ -107,7 +113,10 @@ class NQueen {
 
   public print () {
     console.log('');
-    console.log('Solution ', this.solution);
+    console.log(('Solution ' + this.solution.toString()).bgGreen.black);
+
+    // To keep track of tile count for display purposes.
+    let tile: number = 0;
 
     // Iterate rows/y coordinate
     for (let i: number = 1; i <= this.size; i++) {
@@ -117,30 +126,62 @@ class NQueen {
       // Iterate columns/x coordinate
       for (let j: number = 1; j <= this.size; j++) {
 
+        tile += 1;
+
         let printQueen: boolean = false;
         let queenIndex: string = '';
         
         this.queens.forEach((queen: Queen, index: number) => {
           if (queen.x == j && queen.y == i) {
             printQueen = true;
-            queenIndex = index+1 + ' ';
+            queenIndex = (index+1+' ').toString();
           }
         });
 
-        if (printQueen)
-          row += queenIndex;
-        else
-          row += '_ ';
+        // If odd tile.
+        if ((j % 2) == (i % 2)) {
+          if (printQueen)
+            row += (queenIndex).bgBlack.white;
+          else
+            row += ('  ').bgBlack.white;
+        }
+        // If even tile.
+        else {
+          if (printQueen)
+            row += (queenIndex).bgWhite.black;
+          else
+            row += ('  ').bgWhite.black;
+        }
 
       }// Iterate columns/x coordinate
 
-      console.log(row + i.toString());
+      // Print out row axis.
+      console.log(row + (i.toString() + ' ').bgGreen.black);
 
     }// Iterate rows/y coordinate
+
+    // Print out col axis.
+    let colCount: string = '';
+    for (let k: number = 1; k <= this.size; k++) {
+      colCount += k.toString() + ' ';
+    }
+    console.log(colCount.bgGreen.black);
 
   } // public print ()
 
 }
 
-let nQueen: NQueen = new NQueen(5);
+let N: string = ReadLine.question('Number of pieces to place?');
+
+console.log('');
+console.log('');
+console.log('');
+
+let nQueen: NQueen = new NQueen(parseInt(N));
 nQueen.search();
+
+console.log('');
+console.log('');
+console.log('');
+
+ReadLine.keyIn('Press any key to exit the application...');
