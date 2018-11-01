@@ -42,14 +42,13 @@ class NQueen {
   }
 
   public search ():void {
-    // If we have reached the initial position, after starting.
+    // If we have reached the initial position, again.
     if (this.x == 1 && this.y == 1 && this.started == true) {
       // Finally end.
       //console.log('# of push:', this.numPush, '# of block:', this.numBlock, '# of back:', this.numBack);
-      if (this.solution == 0) {
-        console.log('No solutions found.');
-        console.log('');
-      }
+      console.log('');
+      console.log(this.solution.toString(),'solution(s) found.');
+      console.log('');
       return;
     }
 
@@ -79,7 +78,11 @@ class NQueen {
       this.increment();
     }
 
-    return this.search();
+    // Clear call stack and 'link' application memory.
+    let search = this.search.bind(this);
+    process.nextTick(function () {
+      search();
+    });
   }
 
   private increment (): void {
