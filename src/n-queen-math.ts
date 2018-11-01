@@ -10,12 +10,6 @@ interface Queen {
 
 class NQueenMath {
 
-  public static getSlope (x1: number, y1: number, x2: number, y2: number): number {
-    const deltaRow: number = Math.abs(x1-x2);
-    const deltaCol: number = Math.abs(y1-y2);
-    return deltaRow/deltaCol;
-  }
-
   public static isValid (x: number, y: number, queens: Array<Queen>): boolean {
     let valid: boolean = true;
     queens.forEach((queen) => {
@@ -40,4 +34,11 @@ class NQueenMath {
 
     return valid;
   }
+
+  private static getSlope (x1: number, y1: number, x2: number, y2: number): number {
+    const deltaRow: number = Math.abs(x1-x2);
+    const deltaCol: number = Math.abs(y1-y2);
+    return deltaRow/deltaCol;
+  }
+  
 }
