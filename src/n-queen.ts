@@ -1,6 +1,7 @@
 export { NQueen };
 import { NQueenMath, Queen } from './n-queen-math';
 import 'colors';
+import Moment from 'moment';
 
 class NQueen {
   
@@ -32,6 +33,16 @@ class NQueen {
   */
   private solution: number;
 
+  /*
+    The start time of the process in UNIX epoch.
+  */
+  private startTime: number;
+
+  /*
+    The end time of the process in UNIX epoch.
+  */
+  private endTime: number;
+
   constructor (size: number, x: number, y: number) {
     this.queens = new Array<Queen>();
     this.size = size;
@@ -39,52 +50,53 @@ class NQueen {
     this.y = y;
     this.started = false;
     this.solution = 0;
+    this.startTime = 0;
+    this.endTime = 0;
   }
 
   public search ():void {
     // If we have reached the initial position, again.
-    if (this.x == 1 && this.y == 1 && this.started == true && this.queens.length == 0) {
-      // Finally end.
-      //console.log('# of push:', this.numPush, '# of block:', this.numBlock, '# of back:', this.numBack);
-      console.log('');
-      console.log('Total Rotated Solutions:', this.solution);
-      console.log('Total Unique Solutions:', this.solution/this.size);
-      console.log('');
-      return;
-    }
+    if (this.x == 1 && this.y == 1 && this.started == true && this.queens.length == 0)
+      return this.report();
 
     // Set started flag for true on first run.
-    if (this.started == false)
+    if (this.started == false) {
       this.started = true;
-
-    // Check if valid move.
-    if (NQueenMath.isValid(this.x, this.y, this.queens)) {
-      // If so add queen to position.
-      this.queens.push({ x: this.x, y: this.y });
-
-      // If we have achieved our goal
-      if (this.queens.length == this.size) {
-        this.solution += 1;
-        this.print();
-        this.goBack();
-      }
-      this.increment();
+      this.startTime = Moment().valueOf();
     }
+
+    // If we have found a valid move.
+    if (NQueenMath.isValid(this.x, this.y, this.queens))
+      this.addPiece();
+
     // If we have overlapped to the front/head.
     else if (this.queens.length > 0 && (this.queens[0].x == this.x && this.queens[0].y == this.y)) {
       this.goBack();
       this.increment();
     }
-    else {
-      // Go to next position.
+
+    // If we are neither at the end of this branch, or a valid move, traverse forward.
+    else
       this.increment();
-    }
 
     // Clear call stack and 'link' application memory.
     let search = this.search.bind(this);
     process.nextTick(function () {
       search();
     });
+  }
+
+  private addPiece (): void {
+    // If so add queen to position.
+    this.queens.push({ x: this.x, y: this.y });
+
+    // If we have achieved our goal
+    if (this.queens.length == this.size) {
+      this.solution += 1;
+      this.print();
+      this.goBack();
+    }
+    this.increment();
   }
 
   private increment (): void {
@@ -103,9 +115,10 @@ class NQueen {
       // Set row to row 1.
       this.y = 1;
     }
+    return;
   }
 
-  public goBack ():void {
+  private goBack ():void {
     // Go back to last queen's position + 1.
     this.x = this.queens[this.queens.length-1].x;
     this.y = this.queens[this.queens.length-1].y;
@@ -116,7 +129,7 @@ class NQueen {
     return;
   }
 
-  public print () {
+  private print () {
     console.log('');
     console.log(('Solution ' + this.solution.toString()).bgGreen.black);
 
@@ -172,6 +185,24 @@ class NQueen {
     }
     console.log(colCount.bgGreen.black);
 
+    return;
   } // public print ()
+
+  private report (): void {
+    // Finally end.
+    this.endTime = Moment().valueOf();
+    console.log('');
+    console.log('Total Rotated Solutions:', this.solution);
+    console.log('Total Unique Solutions:', this.solution/this.size);
+    console.log('');
+    console.log('Start time:', Moment(this.startTime).format());
+    console.log('End time:', Moment(this.endTime).format());
+    console.log('');
+    console.log('Start time (Unix Epoch):', Moment(this.startTime).valueOf());
+    console.log('End time (Unix Epoch):', Moment(this.endTime).valueOf());
+    console.log('');
+    console.log('Search Time:', this.endTime - this.startTime, 'milliseconds');
+    return;
+  }
 
 }
