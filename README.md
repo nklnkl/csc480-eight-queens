@@ -9,6 +9,7 @@ Project Presentation is located [here](https://docs.google.com/presentation/d/1t
     * Display will be distorted if N > 9. This is due to padding/spacing issue for pieces that have two or more numeric place values. Possibility that report will be rendered outside of CL and into a GUI file?
 
 ## Latest Report as of 0.5
+Reports are directly copied from run time reports.
 ### Single Rotation
 ```
 Unique Solutions: 92
