@@ -23,6 +23,19 @@ class NQueen {
   private y: number;
 
   /*
+    Initial coordinates of the search. Will be used as the recursive base case to end the search. If full rotation
+    is enabled, the recursive search will end once it has iterated back to the initial coordinates.
+  */
+  private startX: number;
+  private startY: number;
+
+  /*
+    Flag to indicate if the search will run in full rotation. Full rotation means that the head node will be tried
+    on every single position on the board vs only tried in the first row.
+  */
+  private fullRotation: boolean;
+
+  /*
     Flag to indicate if the search process is running. On the first search() call, this will turn from false to true.
     When the search() runs into x=1 & y=1 after starting, the search() tree will return ending the recursion.
   */
@@ -51,11 +64,14 @@ class NQueen {
   private numBack: number;
   private numSearch: number;
 
-  constructor (size: number, x: number, y: number) {
+  constructor (size: number, x: number, y: number, fullRotation: boolean) {
     this.queens = new Array<Queen>();
     this.size = size;
     this.x = x;
     this.y = y;
+    this.startX = x;
+    this.startY = y;
+    this.fullRotation = fullRotation;
     this.started = false;
     this.solution = 0;
     this.startTime = 0;
@@ -69,8 +85,12 @@ class NQueen {
   public search ():void {
     this.numSearch += 1;
 
-    // If we have reached the initial position, again.
-    if (this.x == 1 && this.y == 1 && this.started == true && this.queens.length == 0)
+    // If we enabled full rotation & have reached the initial position, again.
+    if (this.fullRotation == true && this.x == this.startX && this.y == this.startY && this.started == true && this.queens.length == 0)
+      return this.report();
+    
+    // If we disabled full rotation & have reached the next row for the head node.
+    if (this.fullRotation == false && this.x == this.startX && this.y == this.startY + 1 && this.started == true && this.queens.length == 0)
       return this.report();
 
     // Set started flag for true on first run.
@@ -212,8 +232,13 @@ class NQueen {
     // Finally end.
     this.endTime = Moment().valueOf();
     console.log('');
-    console.log('Rotated Solutions:', this.solution);
-    console.log('Unique Solutions:', this.solution/this.size);
+    if (this.fullRotation) {
+      console.log('Rotated Solutions:', this.solution);
+      console.log('Unique Solutions:', this.solution/this.size);
+    }
+    else {
+      console.log('Unique Solutions:', this.solution);
+    }
     console.log('');
     console.log('Start time:', Moment(this.startTime).format());
     console.log('End time:', Moment(this.endTime).format());
